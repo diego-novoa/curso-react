@@ -1,7 +1,5 @@
 /* Objetos lierales en js, son una abstracion del
 	 mundo literal
-
-
 */
 const ironman = {
 	firstName: 'Tony',
