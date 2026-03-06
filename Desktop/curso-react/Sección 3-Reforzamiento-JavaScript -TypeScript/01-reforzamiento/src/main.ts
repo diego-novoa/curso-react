@@ -1,5 +1,5 @@
 import './style.css'
-import './bases/01-Variables-constantes-let'
+import './bases/02-Template-String'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
