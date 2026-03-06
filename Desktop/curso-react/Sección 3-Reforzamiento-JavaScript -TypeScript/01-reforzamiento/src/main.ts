@@ -1,5 +1,5 @@
 import './style.css'
-import './bases/02-Template-String'
+import './bases/03-Objetos-literales'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
