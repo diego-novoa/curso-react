@@ -1,5 +1,5 @@
 import './style.css'
-import './bases/08-Desestructuración-objetos'
+import './bases/16-Interfaces-optimización'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
