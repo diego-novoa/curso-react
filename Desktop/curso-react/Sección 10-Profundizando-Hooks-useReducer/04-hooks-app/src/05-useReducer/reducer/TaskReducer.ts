@@ -1,0 +1,74 @@
+// reducer es una funcion pura que resuelve 
+// un estado basado en los argumentos
+// si los argumentos son tipo string devuelve un string
+// si son objetos devuelve objetos
+
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
+interface TaskState {
+  todos: Todo[];
+  length: number;
+  completed: number;
+  pending: number;
+}
+
+export type TaskAction =
+  | { type: 'ADD_TODO', payload: string }
+  | { type: 'TOGLE_TODO', payload: number }
+  | { type: 'DELETE_TODO', payload: number }
+
+export const taskReducer = (
+  state: TaskState,
+  action: TaskAction
+): TaskState => {
+
+  switch (action.type) {
+    case 'ADD_TODO': {
+
+      const newTodo: Todo = {
+        id: Date.now(),
+        text: action.payload,
+        completed: false,
+
+      }
+      //! no lo pueden hacer
+      // state.todos.push(newTodo)
+
+      return {
+        ...state,
+        todos: [...state.todos, newTodo],
+        length: state.todos.length + 1,
+      }
+    }
+
+    case 'DELETE_TODO':
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.id !== action.payload)
+      }
+
+    case 'TOGLE_TODO': {
+      const updatedTodos = state.todos.map(todo => {
+        if (todo.id === action.payload) {
+          return { ...todo, completed: !todo.completed }
+        }
+        return todo;
+
+      });
+      return {
+        ...state,
+        todos: updatedTodos,
+      };
+    }
+
+
+    default:
+      return state;
+  }
+
+
+};
