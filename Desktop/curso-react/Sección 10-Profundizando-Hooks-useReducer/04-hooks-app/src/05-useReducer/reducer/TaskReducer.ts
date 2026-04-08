@@ -18,8 +18,17 @@ interface TaskState {
 
 export type TaskAction =
   | { type: 'ADD_TODO', payload: string }
-  | { type: 'TOGLE_TODO', payload: number }
-  | { type: 'DELETE_TODO', payload: number }
+  | { type: 'TOGGLE_TODO', payload: number }
+  | { type: 'DELETE_TODO', payload: number };
+
+export const getTaskInitialState = (): TaskState => {
+  return {
+    todos: [],
+    completed: 0,
+    pending: 0,
+    length: 0,
+  };
+};
 
 export const taskReducer = (
   state: TaskState,
@@ -63,7 +72,7 @@ export const taskReducer = (
 
     }
 
-    case 'TOGLE_TODO': {
+    case 'TOGGLE_TODO': {
       const updatedTodos = state.todos.map(todo => {
         if (todo.id === action.payload) {
           return { ...todo, completed: !todo.completed }
