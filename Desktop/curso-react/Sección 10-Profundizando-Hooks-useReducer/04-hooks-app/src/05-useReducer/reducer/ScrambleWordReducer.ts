@@ -13,11 +13,10 @@ export interface scrambleWordsState {
   scrambledWord: string;
   skipCounter: number;
   words: string[];
+  totalWords: number;
 }
 
-export type ScrambledWordsAction = {
-  type: 'NO_TENGO_LA_MENOR_IDEA_CAULES_ACCIONES_NECESITO'
-};
+
 
 const GAME_WORDS = [
   'REACT',
@@ -68,16 +67,69 @@ export const getInitialState = (): scrambleWordsState => {
     scrambledWord: scrambleWord(shuffleWords[0]),
     skipCounter: 0,
     words: shuffleWords,
+    totalWords: shuffleWords.length,
 
   }
 }
 
-export const scrambledWordsReducer = (state: scrambleWordsState, action: ScrambledWordsAction) => {
+export type ScrambledWordsAction =
+  | { type: 'SET_GESS', payload: string }
+  | { type: 'CHECK_ANSWER' }
+  | { type: 'START_NEW_GAME', payload: scrambleWordsState }
+  | { type: 'SKIP_WORD' };
 
-
+export const scrambledWordsReducer = (
+  state: scrambleWordsState,
+  action: ScrambledWordsAction
+): scrambleWordsState => {
 
   switch (action.type) {
 
+    case 'SET_GESS':
+      return {
+        ...state,
+        guess: action.payload.trim().toUpperCase()
+      };
+
+    case 'CHECK_ANSWER': {
+      if (state.currentWord === state.guess) {
+        const newWords = state.words.slice(1);
+
+        return {
+          ...state,
+          words: newWords,
+          points: state.points + 1,
+          guess: '',
+          currentWord: newWords[0],
+          scrambledWord: scrambleWord(newWords[0]),
+        };
+      }
+      return {
+        ...state,
+        guess: '',
+        errorCounter: state.errorCounter + 1,
+        isGameOver: state.errorCounter + 1 >= state.maxAllowErrors
+      };
+    }
+
+    case 'SKIP_WORD': {
+      if (state.skipCounter >= state.maxSkips) return state;
+
+      const updateWords = state.words.slice(1);
+      return {
+        ...state,
+        skipCounter: state.skipCounter + 1,
+        words: updateWords,
+        currentWord: updateWords[0],
+        scrambledWord: scrambleWord(updateWords[0]),
+        guess: '',
+      };
+    }
+
+    case 'START_NEW_GAME': {
+      return action.payload;
+
+    }
     default:
       return state;
   }
